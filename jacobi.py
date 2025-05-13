@@ -10,6 +10,7 @@ class Jacobi:
         self.eps = eps
         self.max_iter = max_iter
         self.N= len(b)
+        self.divergence_threshold=10**9
 
     def calculate(self):
         D = np.diag(self.A)
@@ -26,6 +27,8 @@ class Jacobi:
             inorm=np.linalg.norm(self.A.dot(self.x)-self.b)
             residuum_norms.append(inorm)
             iter+=1
+            if inorm>self. divergence_threshold:
+                break
         self.residuum=residuum_norms
         return self.x,residuum_norms,iter
 

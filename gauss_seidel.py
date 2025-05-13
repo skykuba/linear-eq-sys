@@ -5,11 +5,12 @@ class GaussSeidel:
     def __init__(self, A, b, x0=None, eps=1e-9, max_iter=1000):
         self.A = A
         self.b = b
-        self.x = x0.copy() if x0 is not None else np.zeros_like(b)
+        self.x0 = x0.copy() if x0 is not None else np.zeros(len(b))
         self.eps = eps
         self.max_iter = max_iter
         self.N = len(b)
         self._validate_inputs()
+        self.divergence_threshold=10**9
 
     def _validate_inputs(self):
         if self.A.shape != (self.N, self.N):
@@ -19,33 +20,27 @@ class GaussSeidel:
 
     def calculate(self):
         residuum_norms = []
-        x_prev = self.x.copy()
-
-        # Oblicz początkowy residuum
+        self.x = self.x0
         residual = self.A @ self.x - self.b
-        current_norm = np.linalg.norm(residual)
-        residuum_norms.append(current_norm)
+        inorm = np.linalg.norm(residual)
+        residuum_norms.append(inorm)
         iter = 0
 
-        # Główna pętla algorytmu
-        while current_norm > self.eps and iter < self.max_iter:
-            # Aktualizacja współrzędnych x w miejscu
+        while inorm > self.eps and iter < self.max_iter:
             for i in range(self.N):
-                sigma = np.dot(self.A[i, :i], self.x[:i]) + np.dot(self.A[i, i + 1:], x_prev[i + 1:])
+                sigma = np.dot(self.A[i, :i], self.x[:i]) + np.dot(self.A[i, i + 1:], self.x[i + 1:])
                 self.x[i] = (self.b[i] - sigma) / self.A[i, i]
 
-            # Oblicz nowy residuum
             residual = self.A @ self.x - self.b
-            current_norm = np.linalg.norm(residual)
-            residuum_norms.append(current_norm)
-
-            # Przygotuj x_prev dla następnej iteracji
-            x_prev[:] = self.x.copy()
+            inorm = np.linalg.norm(residual)
+            residuum_norms.append(inorm)
 
             iter += 1
-        self.residuum=residuum_norms
-        return self.x, residuum_norms, iter
+            if inorm > self.divergence_threshold:
+                break
 
+        self.residuum = residuum_norms
+        return self.x, residuum_norms, iter
     def show_residuum(self):
         plt.plot(self.residuum, marker='o')
         plt.yscale('log')

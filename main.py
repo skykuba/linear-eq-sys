@@ -115,4 +115,7 @@ def exerciseC():
     print("czas ", delta)
     gauss_seidel.show_residuum()
 
-exerciseB()
+def exerciseD():
+    A,b=exerciseA()
+
+exerciseC()
