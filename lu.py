@@ -39,7 +39,7 @@ class LU:
         return L,U
 
     def solve2(self):
-        L, U = self.lu_decomposition()
+        L, U = self.lu_decomposition2()
 
         # Rozwiązywanie L * y = b
         y = np.linalg.solve(L, self.b)

@@ -6,7 +6,7 @@ from gauss_seidel import GaussSeidel
 from lu import LU
 INDEX_NUMBER='198088'
 
-N=8000+10*int(INDEX_NUMBER[-2])+int(INDEX_NUMBER[-1])
+N=1200+10*int(INDEX_NUMBER[-2])+int(INDEX_NUMBER[-1])
 RESIDUUM_BREAK_POINT=10**(-6)
 def createA(a1, a2, a3,N):
     a = np.zeros((N, N))
@@ -208,7 +208,7 @@ def plot_times(N_values, jacobi_times, gauss_seidel_times, lu_times):
     plt.show()
 
 def exerciseE():
-    N_values = [100, 500, 1000, 2000, 3000]
+    N_values = [100, 500, 1000, 2000, 3000,4000,5000,6000,7000,8000]
     jacobi_times, gauss_seidel_times, lu_times = measure_time(N_values)
     plot_times(N_values, jacobi_times, gauss_seidel_times, lu_times)
 
